@@ -8,12 +8,16 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import { useProductViewModel } from '../viewmodels/useProductViewModel';
 
-const ProductScreen = () => {
+const ProductScreen = (props) => {
   // Extract products, loading and error states from the custom hook
+  const {navigation} = props
   const { products, isLoading, error } = useProductViewModel();
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (product,e) => {
     alert(`Added ${product.title} to cart!`);
+  };
+  const handleCardPress = (product) => {
+    navigation.navigate('ProductDetails', { productId: product.id });
   };
 
   // Loading and Error State Management
@@ -38,6 +42,7 @@ const ProductScreen = () => {
           <ProductCard 
             product={item} 
             onAddToCart={handleAddToCart} 
+            onPressCard={handleCardPress}
           />
         )}
       />

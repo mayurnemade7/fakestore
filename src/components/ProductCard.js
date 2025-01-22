@@ -2,9 +2,13 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
-const ProductCard = ({ product, onAddToCart }) => {
+const ProductCard = ({ product, onAddToCart, onPressCard }) => {
   return (
-    <View style={styles.productCard}>
+    <TouchableOpacity
+    style={styles.productCard}
+    onPress={() => onPressCard(product)} // Handle click for card
+    activeOpacity={0.8} // Optional: Adjust the opacity when pressed
+  >
      <FastImage source={{ uri: product.image }} style={styles.productImage} />
       <Text style={styles.productTitle} numberOfLines={2}>{product.title}</Text>
       <Text style={styles.productPrice}>${product.price}</Text>
@@ -14,7 +18,7 @@ const ProductCard = ({ product, onAddToCart }) => {
       <TouchableOpacity style={styles.addToCartButton} onPress={() => onAddToCart(product)}>
         <Text style={styles.addToCartText}>Add to Cart</Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
