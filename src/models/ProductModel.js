@@ -9,7 +9,7 @@ export const fetchProducts = async () => {
     if (response.status === 200) {
       return response.data.products;
     }
-    console.log("response", response)
+    //console.log("response", response)
     throw new Error('Failed to fetch products');
   } catch (error) {
     throw new Error(error.response?.data?.message || error.message);

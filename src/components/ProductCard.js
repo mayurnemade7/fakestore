@@ -1,12 +1,54 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+  useSharedValue,
+  withSpring,
+  interpolateColor
+} from 'react-native-reanimated';
 
 const ProductCard = ({ product, onAddToCart, onPressCard }) => {
+  const cardRef = useRef(null);
+  const scale = useSharedValue(1);
+  const backgroundColor = useSharedValue('#ffffff');
+
+  useEffect(() => {
+    scale.value = 1;
+    backgroundColor.value = '#ffffff';
+  }, [scale, backgroundColor]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+      backgroundColor: interpolateColor(
+        scale.value,
+        [1, 1.1],
+        ['#ffffff', '#f0f0f0']
+      ),
+    };
+  }, [scale, backgroundColor]);
+
+  const handlePressIn = () => {
+    scale.value = withSpring(1.1);
+    backgroundColor.value = '#f0f0f0';
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1);
+    backgroundColor.value = '#ffffff';
+    onPressCard(product)
+  };
+  
   return (
+    <Animated.View style={[styles.productCard, animatedStyle]}>
     <TouchableOpacity
-    style={styles.productCard}
-    onPress={() => onPressCard(product)} // Handle click for card
+    // style={styles.productCard}
+    style={{alignItems:'center'}}
+    onPressIn={handlePressIn}
+    onPressOut={handlePressOut}
     activeOpacity={0.8} // Optional: Adjust the opacity when pressed
   >
      <FastImage source={{ uri: product.image }} style={styles.productImage} />
@@ -19,6 +61,7 @@ const ProductCard = ({ product, onAddToCart, onPressCard }) => {
         <Text style={styles.addToCartText}>Add to Cart</Text>
       </TouchableOpacity>
     </TouchableOpacity>
+    </Animated.View>
   );
 };
 
